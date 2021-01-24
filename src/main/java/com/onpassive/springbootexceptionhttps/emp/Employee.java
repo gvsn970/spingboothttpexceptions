@@ -93,6 +93,23 @@ public class Employee {
 		return builder.toString();
 	}
 
+	public Employee(long id,
+			@Size(min = 4, max = 45, message = "emp name must 4 greater then or less then 45") String empName,
+			@NotEmpty(message = "emp phone Number is required") String phoneNumber,
+			@NotEmpty(message = "emp email id is required") @Email(message = "email should be a valid email") String emailId,
+			@NotEmpty(message = "emp password is required") String password) {
+		super();
+		this.id = id;
+		this.empName = empName;
+		this.phoneNumber = phoneNumber;
+		this.emailId = emailId;
+		this.password = password;
+	}
+
+	public Employee() {
+		super();
+	}
+
 	
 
 	
