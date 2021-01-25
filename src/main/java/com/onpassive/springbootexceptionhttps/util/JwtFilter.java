@@ -19,7 +19,7 @@ import com.onpassive.springbootexceptionhttps.security.CustomUserServiceDetailes
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
+ 
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
