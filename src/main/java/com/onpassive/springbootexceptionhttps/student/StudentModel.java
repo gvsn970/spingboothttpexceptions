@@ -1,4 +1,4 @@
-package com.onpassive.springbootexceptionhttps.Student;
+package com.onpassive.springbootexceptionhttps.student;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
