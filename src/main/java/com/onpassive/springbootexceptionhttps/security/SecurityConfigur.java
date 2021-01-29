@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -49,11 +50,28 @@ public class SecurityConfigur extends WebSecurityConfigurerAdapter {
 		http.cors().disable();
 		http.csrf().disable().authorizeRequests().antMatchers("/api/v1/authenticate")
 		.permitAll().antMatchers(HttpMethod.OPTIONS,"/**")
+		.permitAll().antMatchers("/api/v1/add")
+		.permitAll().antMatchers("/api/v1/fileupload")
 		.permitAll().anyRequest().authenticated()
 				.and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		;
 	}
+	  @Override
+	  public void configure(WebSecurity web) throws Exception {
+	    // Allow swagger to be accessed without authentication
+	    web.ignoring().antMatchers("/v2/api-docs")//
+	        .antMatchers("/swagger-resources/**")//
+	        .antMatchers("/swagger-ui.html")//
+	        .antMatchers("/configuration/**")//
+	        .antMatchers("/webjars/**")//
+	        .antMatchers("/public")
+	        
+	        // Un-secure H2 Database (for testing purposes, H2 console shouldn't be unprotected in production)
+	        .and()
+	        .ignoring()
+	        .antMatchers("/h2-console/**/**");;
+	  }
 
 }

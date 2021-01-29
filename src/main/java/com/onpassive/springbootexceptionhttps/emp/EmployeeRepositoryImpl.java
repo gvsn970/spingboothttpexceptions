@@ -12,10 +12,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class EmployeeRepositoryImpl {
-	
-	@Autowired
-	EmployeeRepository employeeRepository;
-
+	/*
+	 * @Autowired EmployeeRepository employeeRepository;
+	 */
 	
     @Autowired
     private EntityManager em;

@@ -19,12 +19,14 @@ public class Employee {
 	private long id;
 
 
-	@Size(min = 4, max = 45, message = "emp name must 4 greater then or less then 45")
+	
 	@Column(name = "emp_name", nullable = false)
+	@NotEmpty(message = "emp Name  is required")
 	private String empName;
 
-	@NotEmpty(message = "emp phone Number is required")
+	
 	@Column(name = "phone_number", nullable = false)
+	@NotEmpty(message = "emp phone Number is required")
 	private String phoneNumber;
 
 	@Column(name = "email", nullable = false)

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -15,7 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,19 +58,17 @@ public class EmpController {
 
 		return empService.findAll();
 	}
-	
 
-    @PostMapping("/authenticate")
-    public String generateToken(@RequestBody AuthRequest authRequest) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-            );
-        } catch (Exception ex) {
-            throw new Exception("inavalid username/password");
-        }
-        return util.generateToken(authRequest.getUsername());
-    }
+	@PostMapping("/authenticate")
+	public String generateToken(@RequestBody AuthRequest authRequest) throws Exception {
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+		} catch (Exception ex) {
+			throw new Exception("inavalid username/password");
+		}
+		return util.generateToken(authRequest.getUsername());
+	}
 
 	@GetMapping("/employees/{id}")
 	public ResponseEntity<Employee> getEmployeeById(@PathVariable(value = "id") Long employeeId)
@@ -74,13 +78,15 @@ public class EmpController {
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
-	public ResponseEntity<?> createUser(@Valid @RequestBody Employee user, MultipartFile[] file) throws IOException {
+	public ResponseEntity<?> createUser(@Valid @RequestBody Employee user) throws IOException {
 		Employee existEmp = empService.findByEmailId(user.getEmailId());
+		System.out.println("existEmp :::::::::::" + existEmp);
 		Employee employee = null;
+
 		if (existEmp == null) {
 			employee = empService.save(user);
 			if (employee.getId() != 0) {
-				ResponseEntity<?> status = fileupload(employee.getId(), file);
+				// ResponseEntity<?> status = fileupload(employee.getId(), file);
 				// System.out.println("status :::::::::::"+status.get);
 			}
 			return new ResponseEntity<>(employee, HttpStatus.OK);
@@ -90,6 +96,17 @@ public class EmpController {
 			return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 		}
 
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+		Map<String, String> errors = new HashMap<>();
+
+		ex.getBindingResult().getFieldErrors().forEach(error -> 
+			errors.put(error.getField(), error.getDefaultMessage()));
+		
+		return errors;
 	}
 
 	@PutMapping("/update/{id}")
