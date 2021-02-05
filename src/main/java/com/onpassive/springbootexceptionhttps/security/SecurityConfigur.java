@@ -52,6 +52,8 @@ public class SecurityConfigur extends WebSecurityConfigurerAdapter {
 		.permitAll().antMatchers(HttpMethod.OPTIONS,"/**")
 		.permitAll().antMatchers("/api/v1/add")
 		.permitAll().antMatchers("/api/v1/fileupload")
+		.permitAll().antMatchers("/permissions/**")
+		.permitAll().antMatchers("/role/**")
 		.permitAll().anyRequest().authenticated()
 				.and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
