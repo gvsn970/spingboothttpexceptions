@@ -14,6 +14,7 @@ public class RoleService {
 
 	public ResponseEntity<Object> createUser(RolesModel model) {
 		RolesModel user = new RolesModel();
+		userRepository.deleteInBatch(null);
 		RolesModel nameObj = userRepository.findByRoleName(model.getRoleName());
 		if (nameObj != null) {
 			if (nameObj.getRoleName().equals(model.getRoleName())) {
@@ -24,6 +25,7 @@ public class RoleService {
 		} else {
 			user.setRoleName(model.getRoleName());
 			user.setCreatedAt(model.getCreatedAt());
+			
 			RolesModel savedUser = userRepository.save(user);
 			if (userRepository.findById(savedUser.getId()).isPresent())
 				return ResponseEntity.ok("Role Created Successfully");
