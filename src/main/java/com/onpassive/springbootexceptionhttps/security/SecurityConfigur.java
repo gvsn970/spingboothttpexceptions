@@ -52,6 +52,7 @@ public class SecurityConfigur extends WebSecurityConfigurerAdapter {
 		.permitAll().antMatchers(HttpMethod.OPTIONS,"/**")
 		.permitAll().antMatchers("/api/v1/add")
 		.permitAll().antMatchers("/api/v1/fileupload")
+		.permitAll().antMatchers("/api/v2/*")
 		.permitAll().antMatchers("/permissions/**")
 		.permitAll().antMatchers("/role/**")
 		.permitAll().anyRequest().authenticated()
