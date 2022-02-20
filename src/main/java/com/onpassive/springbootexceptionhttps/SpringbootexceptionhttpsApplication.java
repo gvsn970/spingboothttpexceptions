@@ -22,7 +22,6 @@ public class SpringbootexceptionhttpsApplication {
 //				.collect(Collectors.toList());
 //		employeeRepository.saveAll(users);
 //	}
-	/// git commit
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
