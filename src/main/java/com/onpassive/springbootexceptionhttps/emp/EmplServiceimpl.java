@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.onpassive.springbootexceptionhttps.exe.ResourceNotFoundException;
@@ -19,6 +20,9 @@ import com.onpassive.springbootexceptionhttps.exe.ResourceNotFoundException;
 @Service
 public class EmplServiceimpl implements EmpService {
 
+	@Autowired
+	RestTemplate restTemplate;
+	
 	@Autowired
 	EmployeeRepository employeeRepository;
 	
@@ -29,6 +33,7 @@ public class EmplServiceimpl implements EmpService {
 	public List<Object[]> login(String email, String password) {
 		return employeeRepositoryImpl.login(email,password);
 	}
+	
 
 	@Override
 	public List<Employee> findAll() {
